@@ -144,7 +144,7 @@ if __name__ == "__main__":
     d0 = State("d0: vulnerability found", 0, [Choice(d1, 0.8), Choice(d2, 0.2)])
 
     LEARNING_RATE = 0.1
-    N_EPISODES = 100000
+    N_EPISODES = 10000
     START_STATE = d0
     STEP_COST = -1
 
@@ -152,8 +152,8 @@ if __name__ == "__main__":
     total_payoff = 0
     for i in range(N_EPISODES):
         total_payoff += run_baseline(START_STATE, STEP_COST)
-    average_payoff = total_payoff / N_EPISODES
-    print(f"Basline average payoff = {average_payoff}")
+    expected_payoff = total_payoff / N_EPISODES
+    print(f"Baseline expected payoff = {expected_payoff}")
 
     # Run simulations.
     for i in range(N_EPISODES):
@@ -163,7 +163,12 @@ if __name__ == "__main__":
 
     # Print simulation parameters and terminal states' values.
     print(f"N_EPISODES={N_EPISODES}, LEARNING_RATE={LEARNING_RATE}, START_STATE=\"{START_STATE.name}\", STEP_COST={STEP_COST}")
-    print("[terminal_state_id: state_name] = value")
+    print("[state_id: state_name] = value (terminal states indicated with >)")
+    print("*" * 25, "TERMINAL STATES")
     for state in State.all_states:
         if state.is_terminal_state():
+            print(f"[{state.name}] = {float(state.value):.5}")
+    print("*" * 25, "NON-TERMINAL STATES")
+    for state in State.all_states:
+        if not state.is_terminal_state():
             print(f"[{state.name}] = {float(state.value):.5}")    
